@@ -40,5 +40,3 @@ Initialized a local git repository, added files, and made commits.
 ### Task 2: Remote git repository
 
 Created a remote repository on GitHub and pushed the local repository to GitHub.
-
-![](Screenshots/l5.png)

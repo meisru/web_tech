@@ -1,0 +1,57 @@
+#link-new-tab {
+    display: block;
+    padding: 20px;
+    text-align: center;
+    background-color: #90EE90;
+    color: #cc0000;
+    text-decoration: underline;
+}
+
+#link-same-tab {
+    display: block;
+    padding: 20px;
+    text-align: center;
+    background-color: #444444;
+    color: #FFA500;
+    text-decoration: underline;
+}
+
+#link-visited {
+    display: block;
+    padding: 20px;
+    text-align: center;
+    background-color: #000000;
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Link states */
+#link-new-tab:hover,
+#link-same-tab:hover,
+#link-visited:hover {
+    color: #ff1a1a;
+}
+
+#link-new-tab:active {
+    color: #990000;
+}
+
+#link-new-tab:visited {
+    color: #555555;
+}
+
+#link-same-tab:active {
+    color: #ff8800;
+}
+
+#link-same-tab:visited {
+    color: #555555;
+}
+
+#link-visited:active {
+    color: #aaaaaa;
+}
+
+#link-visited:visited {
+    color: #555555;
+}

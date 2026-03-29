@@ -6,6 +6,14 @@
     font-style: italic;
 }
 
+/* Listing page styles */
+#listing-heading {
+    color: #ffffff;
+    background-color: #4a9090;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
 /* Links page styles */
 #link-new-tab {
     display: block;

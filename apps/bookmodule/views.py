@@ -17,3 +17,6 @@ def links(request):
 
 def text_formatting(request):
     return render(request, 'bookmodule/text_formatting.html')
+
+def listing(request):
+    return render(request, 'bookmodule/listing.html')

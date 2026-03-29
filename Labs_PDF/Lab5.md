@@ -193,3 +193,78 @@ The output at `http://127.0.0.1:8000/books/html5/text/formatting`:
 ![](Screenshots/l44.png)
 
 ## Task 3: Listing (nested)
+
+In `apps/static/main.css` the `#listing-heading` style was added for the h1 tag (white bold text, teal background):
+
+```css
+#listing-heading {
+    color: #ffffff;
+    background-color: #4a9090;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+```
+
+<br>
+In `apps/templates/bookmodule/listing.html` is the new template that extends `base.html`, loads `main.css`, and displays a nested unordered list with ordered sub-lists:
+
+```html
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block title %}Listing{% endblock title %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'main.css' %}">
+{% endblock stylesheets %}
+{% block content %}
+<h1 id="listing-heading">The Best Features of the Internet</h1>
+<ul>
+    <li>You can meet new people from countries around the world.</li>
+    <li>You have access to new media as it becomes public:
+        <ul>
+            <li>New games</li>
+            <li>New applications
+                <ol>
+                    <li>For business</li>
+                    <li>For pleasure</li>
+                </ol>
+            </li>
+            <li>Around the clock news</li>
+            <li>Search engines</li>
+            <li>Shopping</li>
+            <li>Programming
+                <ol>
+                    <li>XML</li>
+                    <li>Java</li>
+                    <li>HTML5</li>
+                    <li>JavaScript</li>
+                    <li>New languages</li>
+                </ol>
+            </li>
+        </ul>
+    </li>
+    <li>Links</li>
+    <li>Keeping in touch with old friends</li>
+    <li>It's the technology of the future!</li>
+</ul>
+{% endblock content %}
+```
+
+<br>
+In `apps/bookmodule/views.py` the `listing` view was added:
+
+```python
+def listing(request): # Here
+    return render(request, 'bookmodule/listing.html')
+```
+
+<br>
+In `apps/bookmodule/urls.py` the URL `html5/listing` was added to the urlpatterns list:
+
+```python
+path('html5/listing', views.listing, name="books.listing"),
+```
+
+<br>
+The output at `http://127.0.0.1:8000/books/html5/listing`:
+
+![](Screenshots/l45.png)

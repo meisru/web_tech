@@ -136,4 +136,60 @@ Visited state:
 
 ## Task 2: Text formatters (nested formatters)
 
+In `apps/static/main.css` the `#formatting-heading` style was added for the h1 tag (green italic text, light yellow-green background):
+
+```css
+#formatting-heading {
+    color: #2e7d00;
+    background-color: #f0f4d8;
+    padding: 10px 20px;
+    font-style: italic;
+}
+```
+
+<br>
+In `apps/templates/bookmodule/text_formatting.html` is the new template that extends `base.html`, loads `main.css`, and displays 10 formatting tags:
+
+```html
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block title %}Text Formatting{% endblock title %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'main.css' %}">
+{% endblock stylesheets %}
+{% block content %}
+<h1 id="formatting-heading">Example of Formatting tags</h1>
+<p>This text has <b>subtext</b> using b tag</p>
+<p>This text has <strong>subtext</strong> using strong tag</p>
+<p>This text has <i>subtext</i> using i tag</p>
+<p>This text has <em>subtext</em> using emphasize tag</p>
+<p>This text has <small>subtext</small> using small tag</p>
+<p>This text has <mark>subtext</mark> using mark tag</p>
+<p>This text has <del>subtext</del> using del tag</p>
+<p>This text has <ins>subtext</ins> using ins tag</p>
+<p>This text has X<sub>subtext</sub> using sub tag</p>
+<p>This text has X<sup>subtext</sup> using sup tag</p>
+{% endblock content %}
+```
+
+<br>
+In `apps/bookmodule/views.py` the `text_formatting` view was added:
+
+```python
+def text_formatting(request): # Here
+    return render(request, 'bookmodule/text_formatting.html')
+```
+
+<br>
+In `apps/bookmodule/urls.py` the URL `html5/text/formatting` was added to the urlpatterns list:
+
+```python
+path('html5/text/formatting', views.text_formatting, name="books.text_formatting"),
+```
+
+<br>
+The output at `http://127.0.0.1:8000/books/html5/text/formatting`:
+
+![](Screenshots/l44.png)
+
 ## Task 3: Listing (nested)

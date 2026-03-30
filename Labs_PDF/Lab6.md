@@ -61,6 +61,69 @@ button:hover {
 
 Output after running the server at `http://127.0.0.1:8000/books/search`:
 
-![search form](Screenshots/)
+![search form](Screenshots/l47.png)
 
 ## Task 2: Handle the form once submitted
+
+In `apps/bookmodule/view.py`, created the following function:
+
+```python
+def __getBooksList():
+    book1 = {'id':12344321, 'title':'Continuous Delivery', 'author':'J.Humble and D. Farley'}
+    book2 = {'id':56788765,'title':'Reversing: Secrets of Reverse Engineering', 'author':'E. Eilam'}
+    book3 = {'id':43211234, 'title':'The Hundred-Page Machine Learning Book', 'author':'Andriy Burkov'}
+    return [book1, book2, book3]
+```
+
+<br>
+
+Then in the same corresponding view/controller in `views.py` that shows the form, added the code where if there is an action in the form, the form needs to be handled in that view.
+
+```python
+def search(request):
+    if request.method == "POST":
+        string = request.POST.get('keyword').lower()
+        isTitle = request.POST.get('option1')
+        isAuthor = request.POST.get('option2')
+        books = __getBooksList()
+        newBooks = []
+        for item in books:
+            contained = False
+            if isTitle and string in item['title'].lower(): contained = True
+            if not contained and isAuthor and string in item['author'].lower(): contained = True
+            if contained: newBooks.append(item)
+        return render(request, 'bookmodule/bookList.html', {'books': newBooks})
+    return render(request, 'bookmodule/search.html')
+```
+
+<br>
+
+Then created an HTMl file `bookList.html` to list the books:
+
+```html
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block title %} Search Results {% endblock title %}
+{% block content %}
+<h1>Search Results</h1>
+{% if books %}
+  {% for book in books %}
+    <div>
+      <h2>{{ book.title }}</h2>
+      <p>Author: {{ book.author }}</p>
+      <p>ID: {{ book.id }}</p>
+    </div>
+    <hr>
+  {% endfor %}
+{% else %}
+  <p>No books found.</p>
+{% endif %}
+<a href="{% url 'books.search' %}">Back to Search</a>
+{% endblock content %}
+```
+
+<br>
+
+Output at `http://127.0.0.1:8000/books/search`:
+
+![search results](Screenshots/l48.png)

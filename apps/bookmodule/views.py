@@ -23,3 +23,6 @@ def listing(request):
 
 def tables(request):
     return render(request, 'bookmodule/tables.html')
+
+def search(request):
+    return render(request, 'bookmodule/search.html')

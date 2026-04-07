@@ -1,19 +1,10 @@
 {% extends "layouts/base.html" %}
 {% load static %}
-{% block title %} Search Results {% endblock title %}
+{% block title %} Books {% endblock title %}
 {% block content %}
-<h1>Search Results</h1>
-{% if books %}
-  {% for book in books %}
-    <div>
-      <h2>{{ book.title }}</h2>
-      <p>Author: {{ book.author }}</p>
-      <p>ID: {{ book.id }}</p>
-    </div>
+<h1>Books:</h1>
+  {% for obj in books %}
+  ID: {{ obj.id }}, Title: {{ obj.title }}, Author: {{ obj.author }}, Price: {{ obj.price }}, Edition: {{ obj.edition }}
     <hr>
   {% endfor %}
-{% else %}
-  <p>No books found.</p>
-{% endif %}
-<a href="{% url 'books.search' %}">Back to Search</a>
 {% endblock content %}

@@ -37,12 +37,12 @@ def simple_query(request):
     mybooks = Book.objects.filter(title__icontains='and') # <- multiple objects
     return render(request, 'bookmodule/bookList.html', {'books':mybooks})
 
-def complex_query(request):
-    mybooks=books=Book.objects.filter(author__isnull = False).filter(title__icontains='and').filter(edition__gte = 2).exclude(price__lte = 100)[:10]
-    if len(mybooks)>=1:
-        return render(request, 'bookmodule/bookList.html', {'books':mybooks})
-    else:
-        return render(request, 'bookmodule/index.html')
+# def complex_query(request):  # broken: uses removed fields author, edition
+#     mybooks=books=Book.objects.filter(author__isnull = False).filter(title__icontains='and').filter(edition__gte = 2).exclude(price__lte = 100)[:10]
+#     if len(mybooks)>=1:
+#         return render(request, 'bookmodule/bookList.html', {'books':mybooks})
+#     else:
+#         return render(request, 'bookmodule/index.html')
 
 def search(request):
     if request.method == "POST":
@@ -63,13 +63,13 @@ def lab8_task1(request):
     mybooks = Book.objects.filter(Q(price__lte=80))
     return render(request, 'bookmodule/lab8_task1.html', {'books': mybooks})
 
-def lab8_task2(request):
-    mybooks = Book.objects.filter(Q(edition__gt=3) & (Q(title__icontains='qu') | Q(author__icontains='qu')))
-    return render(request, 'bookmodule/lab8_task2.html', {'books': mybooks})
+# def lab8_task2(request):  # broken: uses removed fields edition, author
+#     mybooks = Book.objects.filter(Q(edition__gt=3) & (Q(title__icontains='qu') | Q(author__icontains='qu')))
+#     return render(request, 'bookmodule/lab8_task2.html', {'books': mybooks})
 
-def lab8_task3(request):
-    mybooks = Book.objects.filter(~Q(edition__gt=3) & ~(Q(title__icontains='qu') | Q(author__icontains='qu')))
-    return render(request, 'bookmodule/lab8_task3.html', {'books': mybooks})
+# def lab8_task3(request):  # broken: uses removed fields edition, author
+#     mybooks = Book.objects.filter(~Q(edition__gt=3) & ~(Q(title__icontains='qu') | Q(author__icontains='qu')))
+#     return render(request, 'bookmodule/lab8_task3.html', {'books': mybooks})
 
 def lab8_task4(request):
     mybooks = Book.objects.all().order_by('title')
@@ -88,3 +88,10 @@ def lab8_task5(request):
 def lab8_task7(request):
     cities = Address.objects.annotate(student_count=Count('student'))
     return render(request, 'bookmodule/lab8_task7.html', {'cities': cities})
+
+def lab9_task1(request):
+    total = Book.objects.aggregate(total=Sum('quantity'))['total'] or 1
+    mybooks = Book.objects.all()
+    for book in mybooks:
+        book.percentage = round((book.quantity / total) * 100, 2)
+    return render(request, 'bookmodule/lab9_task1.html', {'books': mybooks})

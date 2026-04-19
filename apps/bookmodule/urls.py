@@ -14,4 +14,5 @@ urlpatterns = [
     path('simple/query', views.simple_query, name="books.simple_query"),
     path('complex/query', views.complex_query, name="books.complex_query"),
     path('lab8/task1', views.lab8_task1, name="books.lab8_task1"),
+    path('lab8/task2', views.lab8_task2, name="books.lab8_task2"),
 ]

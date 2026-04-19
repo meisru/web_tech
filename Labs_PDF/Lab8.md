@@ -69,6 +69,36 @@ Output at `http://localhost:8000/books/lab8/task2`:
 
 ## Task 3
 
+- `apps/bookmodule/urls.py` — added route:
+  ```python
+  path('lab8/task3', views.lab8_task3, name="books.lab8_task3"),
+  ```
+
+- `apps/bookmodule/views.py` — added view at the bottom:
+  ```python
+  def lab8_task3(request):
+      mybooks = Book.objects.filter(~Q(edition__gt=3) & ~(Q(title__icontains='qu') | Q(author__icontains='qu')))
+      return render(request, 'bookmodule/lab8_task3.html', {'books': mybooks})
+  ```
+
+- `apps/templates/bookmodule/lab8_task3.html` — new template displaying the filtered books, with an `{% empty %}` fallback if none are found.
+  ```html
+  {% extends "layouts/base.html" %}
+  {% block title %} Lab8 Task3 {% endblock title %}
+  {% block content %}
+  <h1>Books with Edition &le; 3 and Title and Author Do Not Contain 'qu'</h1>
+  {% for book in books %}
+    ID: {{ book.id }}, Title: {{ book.title }}, Author: {{ book.author }}, Price: {{ book.price }}, Edition: {{ book.edition }}
+    <hr>
+  {% empty %}
+    <p>No books found matching the criteria.</p>
+  {% endfor %}
+  {% endblock content %}
+  ```
+
+Output at `http://localhost:8000/books/lab8/task3`:
+![lab8_task3_output.png](Screenshots/l57.png)
+
 ## Task 4
 
 ## Task 5

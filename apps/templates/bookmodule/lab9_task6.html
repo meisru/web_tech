@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+{% block title %} Lab9 Task6 {% endblock title %}
+{% block content %}
+<h1>Publishers with Books Priced &gt; 50 and Quantity Between 1 and 4</h1>
+{% for publisher in publishers %}
+  Publisher: {{ publisher.name }}, Book Count: {{ publisher.book_count }}
+  <hr>
+{% empty %}
+  <p>No publishers found.</p>
+{% endfor %}
+{% endblock content %}

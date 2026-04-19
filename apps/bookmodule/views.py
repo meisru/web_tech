@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from django.db.models import Q, Count, Sum, Avg, Max, Min
-from .models import Book
+from django.db.models import Q, Count, Sum, Avg, Max, Min, Subquery, OuterRef
+from .models import Book, Publisher
 from apps.usermodule.models import Address
 
 def index(request):
@@ -95,3 +95,42 @@ def lab9_task1(request):
     for book in mybooks:
         book.percentage = round((book.quantity / total) * 100, 2)
     return render(request, 'bookmodule/lab9_task1.html', {'books': mybooks})
+
+def lab9_task2(request):
+    publishers = Publisher.objects.annotate(total_stock=Sum('book__quantity'))
+    return render(request, 'bookmodule/lab9_task2.html', {'publishers': publishers})
+
+def lab9_task3(request):
+    oldest_title = Book.objects.filter(
+        publisher=OuterRef('pk')
+    ).order_by('pubdate').values('title')[:1]
+
+    oldest_pubdate = Book.objects.filter(
+        publisher=OuterRef('pk')
+    ).order_by('pubdate').values('pubdate')[:1]
+
+    publishers = Publisher.objects.annotate(
+        oldest_book=Subquery(oldest_title),
+        oldest_pubdate=Subquery(oldest_pubdate),
+    )
+    return render(request, 'bookmodule/lab9_task3.html', {'publishers': publishers})
+
+def lab9_task4(request):
+    publishers = Publisher.objects.annotate(
+        avg_price=Avg('book__price'),
+        min_price=Min('book__price'),
+        max_price=Max('book__price'),
+    )
+    return render(request, 'bookmodule/lab9_task4.html', {'publishers': publishers})
+
+def lab9_task5(request):
+    publishers = Publisher.objects.annotate(
+        highly_rated_count=Count('book', filter=Q(book__rating__gte=4))
+    ).filter(highly_rated_count__gt=0)
+    return render(request, 'bookmodule/lab9_task5.html', {'publishers': publishers})
+
+def lab9_task6(request):
+    publishers = Publisher.objects.annotate(
+        book_count=Count('book', filter=Q(book__price__gt=50) & Q(book__quantity__gte=1) & Q(book__quantity__lt=5))
+    ).filter(book_count__gt=0)
+    return render(request, 'bookmodule/lab9_task6.html', {'publishers': publishers})

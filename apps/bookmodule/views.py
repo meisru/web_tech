@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 from .models import Book
 
 def index(request):
@@ -56,3 +57,7 @@ def search(request):
             if contained: newBooks.append(item)
         return render(request, 'bookmodule/bookList.html', {'books': newBooks})
     return render(request, 'bookmodule/search.html')
+
+def lab8_task1(request):
+    mybooks = Book.objects.filter(Q(price__lte=80))
+    return render(request, 'bookmodule/lab8_task1.html', {'books': mybooks})

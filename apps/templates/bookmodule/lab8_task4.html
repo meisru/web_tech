@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+{% block title %} Lab8 Task4 {% endblock title %}
+{% block content %}
+<h1>Books Ordered by Title</h1>
+{% for book in books %}
+  ID: {{ book.id }}, Title: {{ book.title }}, Author: {{ book.author }}, Price: {{ book.price }}, Edition: {{ book.edition }}
+  <hr>
+{% empty %}
+  <p>No books found.</p>
+{% endfor %}
+{% endblock content %}

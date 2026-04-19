@@ -101,7 +101,78 @@ Output at `http://localhost:8000/books/lab8/task3`:
 
 ## Task 4
 
+- `apps/bookmodule/urls.py` — added route:
+  ```python
+  path('lab8/task4', views.lab8_task4, name="books.lab8_task4"),
+  ```
+
+- `apps/bookmodule/views.py` — added view at the bottom:
+  ```python
+  def lab8_task4(request):
+      mybooks = Book.objects.all().order_by('title')
+      return render(request, 'bookmodule/lab8_task4.html', {'books': mybooks})
+  ```
+
+- `apps/templates/bookmodule/lab8_task4.html` — new template displaying books sorted by title, with an `{% empty %}` fallback if none are found.
+  ```html
+  {% extends "layouts/base.html" %}
+  {% block title %} Lab8 Task4 {% endblock title %}
+  {% block content %}
+  <h1>Books Ordered by Title</h1>
+  {% for book in books %}
+    ID: {{ book.id }}, Title: {{ book.title }}, Author: {{ book.author }}, Price: {{ book.price }}, Edition: {{ book.edition }}
+    <hr>
+  {% empty %}
+    <p>No books found.</p>
+  {% endfor %}
+  {% endblock content %}
+  ```
+
+Output at `http://localhost:8000/books/lab8/task4`:
+![lab8_task4_output.png](Screenshots/l58.png)
+
 ## Task 5
+
+Created URL `/books/lab8/task5` that displays aggregated book statistics (count, total, average, max, and min price) using Django aggregation functions.
+
+**Files changed:**
+
+- `apps/bookmodule/urls.py` — added route:
+  ```python
+  path('lab8/task5', views.lab8_task5, name="books.lab8_task5"),
+  ```
+
+- `apps/bookmodule/views.py` — imported aggregation functions and added view at the bottom:
+  ```python
+  from django.db.models import Q, Count, Sum, Avg, Max, Min
+
+  def lab8_task5(request):
+      stats = Book.objects.aggregate(
+          count=Count('id'),
+          total_price=Sum('price'),
+          avg_price=Avg('price'),
+          max_price=Max('price'),
+          min_price=Min('price'),
+      )
+      return render(request, 'bookmodule/lab8_task5.html', {'stats': stats})
+  ```
+
+- `apps/templates/bookmodule/lab8_task5.html` — new template displaying the aggregated statistics.
+  ```html
+  {% extends "layouts/base.html" %}
+  {% block title %} Lab8 Task5 {% endblock title %}
+  {% block content %}
+  <h1>Book Statistics</h1>
+  <p>Number of Books: {{ stats.count }}</p>
+  <p>Total Price: {{ stats.total_price }}</p>
+  <p>Average Price: {{ stats.avg_price }}</p>
+  <p>Maximum Price: {{ stats.max_price }}</p>
+  <p>Minimum Price: {{ stats.min_price }}</p>
+  {% endblock content %}
+  ```
+
+Output at `http://localhost:8000/books/lab8/task5`:
+![lab8_task5_output.png](Screenshots/l59.png)
 
 ## Task 6
 

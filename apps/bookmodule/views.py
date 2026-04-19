@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q, Count, Sum, Avg, Max, Min
 from .models import Book
 
 def index(request):
@@ -69,3 +69,17 @@ def lab8_task2(request):
 def lab8_task3(request):
     mybooks = Book.objects.filter(~Q(edition__gt=3) & ~(Q(title__icontains='qu') | Q(author__icontains='qu')))
     return render(request, 'bookmodule/lab8_task3.html', {'books': mybooks})
+
+def lab8_task4(request):
+    mybooks = Book.objects.all().order_by('title')
+    return render(request, 'bookmodule/lab8_task4.html', {'books': mybooks})
+
+def lab8_task5(request):
+    stats = Book.objects.aggregate(
+        count=Count('id'),
+        total_price=Sum('price'),
+        avg_price=Avg('price'),
+        max_price=Max('price'),
+        min_price=Min('price'),
+    )
+    return render(request, 'bookmodule/lab8_task5.html', {'stats': stats})

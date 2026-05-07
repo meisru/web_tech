@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+{% block title %}Lab10 Part2 – Add Book{% endblock title %}
+{% block stylesheets %}
+<style>
+    form { max-width: 480px; margin-top: 1rem; }
+    form p { margin: 8px 0; }
+    .btn { display: inline-block; padding: 6px 16px; text-decoration: none; border-radius: 4px; font-size: 14px; border: none; cursor: pointer; }
+    .btn-save   { background-color: #4CAF50; color: #fff; }
+    .btn-cancel { background-color: #aaa; color: #fff; }
+    .errorlist { color: #e04040; margin: 0; padding-left: 16px; }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<h1>Add New Book (Part 2)</h1>
+<form method="post" action="{% url 'books.lab9_part2_addbook' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div style="margin-top: 16px;">
+        <button type="submit" class="btn btn-save">Save</button>
+        <a class="btn btn-cancel" href="{% url 'books.lab9_part2_listbooks' %}">Cancel</a>
+    </div>
+</form>
+{% endblock content %}

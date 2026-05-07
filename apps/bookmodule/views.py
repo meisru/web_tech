@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .forms import BookForm
 from django.db.models import Q, Count, Sum, Avg, Max, Min, Subquery, OuterRef
-from .models import Book, Publisher
+from .models import Book, Publisher, Author
 from apps.usermodule.models import Address
 
 def index(request):
@@ -134,3 +135,82 @@ def lab9_task6(request):
         book_count=Count('book', filter=Q(book__price__gt=50) & Q(book__quantity__gte=1) & Q(book__quantity__lt=5))
     ).filter(book_count__gt=0)
     return render(request, 'bookmodule/lab9_task6.html', {'publishers': publishers})
+
+# Lab 10 Part 1 – CRUD (no Django forms)
+
+def lab10_part1_listbooks(request):
+    books = Book.objects.all()
+    return render(request, 'bookmodule/lab10_part1_listbooks.html', {'books': books})
+
+def lab10_part1_addbook(request):
+    if request.method == 'POST':
+        title     = request.POST.get('title')
+        price     = request.POST.get('price')
+        quantity  = request.POST.get('quantity')
+        pubdate   = request.POST.get('pubdate')
+        rating    = request.POST.get('rating')
+        author_id = request.POST.get('author_id')
+        authorObj = Author.objects.get(id=author_id)
+        obj = Book(title=title, price=float(price), quantity=int(quantity),
+                   pubdate=pubdate or None, rating=int(rating))
+        obj.save()
+        obj.authors.add(authorObj)
+        return redirect('books.lab10_part1_listbooks')
+    authors = Author.objects.all()
+    return render(request, 'bookmodule/lab10_part1_addbook.html', {'authors': authors})
+
+def lab10_part1_editbook(request, bookId):
+    book = Book.objects.get(id=bookId)
+    if request.method == 'POST':
+        book.title    = request.POST.get('title')
+        book.price    = float(request.POST.get('price') or 0)
+        book.quantity = int(request.POST.get('quantity') or 1)
+        book.pubdate  = request.POST.get('pubdate') or None
+        book.rating   = int(request.POST.get('rating') or 1)
+        author_id     = request.POST.get('author_id')
+        authorObj     = Author.objects.get(id=author_id)
+        book.save()
+        book.authors.set([authorObj])
+        return redirect('books.lab10_part1_listbooks')
+    authors = Author.objects.all()
+    return render(request, 'bookmodule/lab10_part1_editbook.html', {'book': book, 'authors': authors})
+
+def lab10_part1_deletebook(request, bookId):
+    Book.objects.filter(id=bookId).delete()
+    return redirect('books.lab10_part1_listbooks')
+
+# Lab 10 Part 2 – CRUD with Django forms
+
+def lab9_part2_listbooks(request):
+    books = Book.objects.all()
+    return render(request, 'bookmodule/lab9_part2_listbooks.html', {'books': books})
+
+def lab9_part2_addbook(request):
+    obj = None
+    authors = Author.objects.all()
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            obj = form.save()
+            obj.authors.add(form.cleaned_data['author'])
+            return redirect('books.lab9_part2_listbooks')
+    else:
+        form = BookForm(None)
+    return render(request, 'bookmodule/lab9_part2_addbook.html', {'authors': authors, 'form': form})
+
+def lab9_part2_editbook(request, bookId):
+    book = Book.objects.get(id=bookId)
+    authors = Author.objects.all()
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            obj = form.save()
+            obj.authors.set([form.cleaned_data['author']])
+            return redirect('books.lab9_part2_listbooks')
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'bookmodule/lab9_part2_editbook.html', {'authors': authors, 'form': form, 'book': book})
+
+def lab9_part2_deletebook(request, bookId):
+    Book.objects.filter(id=bookId).delete()
+    return redirect('books.lab9_part2_listbooks')
